@@ -33,7 +33,7 @@ local pkginfo = runtime.get_pkginfo()
 
 function installed()
     local moon_installed = os.exec("moon version") == 0
-    local moonc_installed = os.exec("moonc --v") == 0
+    local moonc_installed = os.exec("moonc -v") == 0
     return moon_installed and moonc_installed
 end
 
