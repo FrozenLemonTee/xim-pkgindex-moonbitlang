@@ -21,57 +21,47 @@ package = {
     programs = { "moon", "moonc", "moonfmt", "moonrun" },
 
     xpm = {
-        windows = { ["latest"] = { } },
-        linux = { ["latest"] = { } },
-        macosx = { ["latest"] = { } },
+        linux = {
+            deps = { "moonbit-installer" },
+            ["latest"] = { }
+        },
+        windows = { ref = "linux" },
+        macosx = { ref = "linux" },
     },
 }
 
-import("xim.base.runtime")
-
-local pkginfo = runtime.get_pkginfo()
+import("xim.libxpkg.log")
+import("xim.libxpkg.pkginfo")
+import("xim.libxpkg.system")
+import("xim.libxpkg.xvm")
 
 function installed()
-    local moon_installed = os.exec("moon version") == 0
-    local moonc_installed = os.exec("moonc -v") == 0
-    return moon_installed and moonc_installed
+    return os.isfile(path.join(_get_moon_root(), "bin", "moon"))
 end
 
 function install()
-    print("install moonbit-cli...")
-    if is_host("windows") then
-        local command = 'powershell -Command "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force; irm https://cli.moonbitlang.cn/install/powershell.ps1 | iex"'
-        os.exec(command)
-    else
-        os.exec("curl -fsSL https://cli.moonbitlang.cn/install/unix.sh | bash")
-    end
+    system.exec("moonbit-installer")
     return true
 end
 
 function config()
     local moon_root = _get_moon_root()
     local moon_bin = path.join(moon_root, "bin")
-    if is_host("windows") then
-        local current_path = os.getenv("PATH") or ""
-        if not current_path:find(moon_bin, 1, true) then
-            os.setenv("PATH", moon_bin .. ";" .. current_path)
-        end
-    else
-        -- Linux/macOS
-        os.addenv("PATH", moon_bin)
-    end
+    os.addenv("PATH", moon_bin)
+
+    xvm.add("moonbit-cli") -- only flag
+
     return true
 end
 
 function uninstall()
     local moon_root = _get_moon_root()
-    if is_host("windows") then
-        os.exec("rmdir /s /q \"" .. moon_root .. "\"")
+    if not os.tryrm(moon_root) then
+        log.warn("Failed to remove Moon installation directory: %s", moon_root)
     else
-        -- Linux/macOS
-        os.exec("rm -rf \"" .. moon_root .. "\"")
+        log.info("Moon has been uninstalled successfully.")
     end
-    print("Moon has been uninstalled successfully.")
+    xvm.remove("moonbit-cli")
     return true
 end
 
