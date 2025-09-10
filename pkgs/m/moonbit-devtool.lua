@@ -5,6 +5,7 @@ package = {
     licenses = "Apache-2.0",
 
     type = "script",
+    namespace = "moonbitlang",
     status = "stable",
     categories = { "moonbit", "tools", "update", "helper"},
     keywords = { "moonbit", "configure", "update", "install"},
