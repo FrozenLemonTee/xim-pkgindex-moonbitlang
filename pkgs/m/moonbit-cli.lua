@@ -40,7 +40,8 @@ end
 function install()
     print("install moonbit-cli...")
     if is_host("windows") then
-        os.exec("Set-ExecutionPolicy RemoteSigned -Scope CurrentUser; irm https://cli.moonbitlang.cn/install/powershell.ps1 | iex")
+        local command = 'powershell -Command "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force; irm https://cli.moonbitlang.cn/install/powershell.ps1 | iex"'
+        os.exec(command)
     else
         os.exec("curl -fsSL https://cli.moonbitlang.cn/install/unix.sh | bash")
     end
