@@ -14,8 +14,17 @@ xim --update index
 ## 使用仓库中的包
 
 ```bash
-# 自动下载安装MoonBit命令行工具
-xlings install moonbitlang:moonbit-cli
+# 自动安装MoonBit开发者集成工具
+xlings install moonbitlang:moonbit-devtool
+
+# 自动下载安装MoonBit环境以及官方命令行工具
+mbtool install
+
+# 自动更新本地MoonBit核心库：https://github.com/moonbitlang/core/blob/main/CONTRIBUTING.md
+mbtool update
+
+# 自动卸载MoonBit环境以及官方命令行工具
+mbtool uninstall
 ```
 
 ## 其他
